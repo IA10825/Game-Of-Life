@@ -7,8 +7,10 @@ public:
 	Grid(sf::Vector2u size, unsigned k = 2);
 	sf::Vector2u getSize() const;
 	void update();
+	void step();
 private:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	bool at(int x, int y) const;
 	const sf::Vector2u size;
 	std::vector<bool> cells;
 	std::vector<sf::RectangleShape> rectangles;
