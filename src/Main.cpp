@@ -1,13 +1,16 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Grid.h"
-#include "BinaryArray.h"
 
 
 int main()
 {
-	auto window = sf::RenderWindow(sf::VideoMode({ 720u, 480u }), "CMake SFML Project");
+	auto window = sf::RenderWindow(sf::VideoMode({ 720u, 480u }), "Game of Life");
 	window.setFramerateLimit(60);
+
+	sf::Image icon;
+	if (!icon.loadFromFile("images/icon.png")) return 1;
+	window.setIcon(icon);
 
 	Grid grid({ 512,512 });
 
