@@ -4,8 +4,7 @@ Grid::Grid(sf::Vector2u size) : size(size), cells(size.x* size.y), vertices(sf::
 	for (unsigned i = 0; i < size.x * size.y; i++) {
 		vertices[i].position = { i % size.x * 1.f, i / size.x * 1.f };
 		vertices[i].color = sf::Color::Green;
-
-		cells[i] = rand() % 2;
+		cells.set(i, rand() % 2);
 	};
 }
 sf::Vector2u Grid::getSize() const {
@@ -16,7 +15,7 @@ void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(vertices);
 }
 void Grid::step() {
-	std::vector<bool> bCells = cells;
+	BinaryArray bCells = cells;
 	for (unsigned y = 0; y < size.y; y++) {
 		for (unsigned x = 0; x < size.x; x++) {
 			unsigned neighbors = 0;
@@ -28,21 +27,18 @@ void Grid::step() {
 			neighbors += at(x, y + 1);
 			neighbors += at(x - 1, y + 1);
 			neighbors += at(x - 1, y);
-			if (neighbors < 2 || neighbors > 3) bCells[y * size.x + x] = false;
-			if (neighbors == 3) bCells[y * size.x + x] = true;
+			if (neighbors < 2 || neighbors > 3) bCells.set(size.x * y + x, false);
+			if (neighbors == 3) bCells.set(size.x * y + x, true);
 		}
 	}
 	cells = bCells;
 }
 void Grid::update() {
 	for (unsigned i = 0; i < size.x * size.y; i++) {
-		vertices[i].color = cells[i] ? sf::Color::White : sf::Color::Black;
+		vertices[i].color = cells.get(i) ? sf::Color::White : sf::Color::Black;
 	};
 }
 
 bool Grid::at(int x, int y) const {
-	if (x >= size.x || x < 0 || y >= size.y || y < 0) {
-		return false;
-	}
-	return cells[size.x * y + x];
+	return cells.get(size.x * y + x);
 }

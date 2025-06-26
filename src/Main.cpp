@@ -1,12 +1,15 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "Grid.h"
+#include "BinaryArray.h"
+
 
 int main()
 {
 	auto window = sf::RenderWindow(sf::VideoMode({ 720u, 480u }), "CMake SFML Project");
 	window.setFramerateLimit(60);
 
-	Grid grid({ 128,128 });
+	Grid grid({ 512,512 });
 
 	while (window.isOpen())
 	{
