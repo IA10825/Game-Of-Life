@@ -1,10 +1,9 @@
 #include "Grid.h"
 
-Grid::Grid(sf::Vector2u size, unsigned k) : size(size), cells(size.x* size.y), rectangles(size.x* size.y) {
+Grid::Grid(sf::Vector2u size) : size(size), cells(size.x* size.y), vertices(sf::PrimitiveType::Points, size.x* size.y) {
 	for (unsigned i = 0; i < size.x * size.y; i++) {
-		rectangles[i].setPosition({ i % size.x * k * 1.f, i / size.x * k * 1.f });
-		rectangles[i].setSize({ k * 1.f, k * 1.f });
-		rectangles[i].setFillColor(sf::Color::Green);
+		vertices[i].position = { i % size.x * 1.f, i / size.x * 1.f };
+		vertices[i].color = sf::Color::Green;
 
 		cells[i] = rand() % 2;
 	};
@@ -14,7 +13,7 @@ sf::Vector2u Grid::getSize() const {
 };
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.transform *= getTransform();
-	for (sf::RectangleShape rect : rectangles) target.draw(rect);
+	target.draw(vertices);
 }
 void Grid::step() {
 	std::vector<bool> bCells = cells;
@@ -37,12 +36,12 @@ void Grid::step() {
 }
 void Grid::update() {
 	for (unsigned i = 0; i < size.x * size.y; i++) {
-		rectangles[i].setFillColor(cells[i] ? sf::Color::White : sf::Color::Black);
+		vertices[i].color = cells[i] ? sf::Color::White : sf::Color::Black;
 	};
 }
 
 bool Grid::at(int x, int y) const {
-	if (x >= size.x || x<0 || y >= size.y || y<0) {
+	if (x >= size.x || x < 0 || y >= size.y || y < 0) {
 		return false;
 	}
 	return cells[size.x * y + x];
